@@ -1,0 +1,171 @@
+8
+#Heading1
+text
+#Heading2
+#Body
+text
+Body#
+Heading2#
+Heading1#
+
+Дадени ни се отворачки тагови #HeadingX каде Х е број од 1 до 6 (#Heading1, (#Heading2, (#Heading3, ... , (#Heading6)
+
+внатре во нив може да има текст. Имаме и затворачки тагови HeadingX# каде Х е исто така број од 1 до 6 (Heading1#,
+Heading2#, ... , Heading6#)
+
+Треба да видиме дали правилно се затворени таговите #Heading1 се затвара со Heading1#
+
+Дополнително дадени се и body тагови #Body (отварачки) и Body# (затварачки) соодветно
+Прво правило: не смееш да имаш вакво нешто
+5
+#Heading3
+#Heading1
+text
+Heading1#
+Heading3#
+
+Не смее да биде вгнезден отворачки таг што е помал од тагот пред  него значи #Heading1 не смее да е вгнездено во
+#Heading3. Во #Heading3 смее да е вгнезден таг кој ја содржи бројката 4,5,6
+
+Второ правило: Не смее во #Body таговите да има вгнездено heading
+5
+#Body
+#Heading1
+text
+Heading1#
+Body#
+
+иако се соодветно затворени, нема да е точно бидејќи има вгнездено heading таг во body тагот
+
+Доколку се правилно напишани (на сите правила е запазено), печатиме "true"
+Инаку печатиме "false"
+
+Задачава се решава со стек, слична е на таа func1 endfunc1, само што ги има овие 2 дополнителни правила
+
+package ISPITNI.JAN25_1;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Stack;
+
+public class Main{
+    public static void main(String[] args) throws IOException {
+
+        BufferedReader br= new BufferedReader(new InputStreamReader(System.in));
+        int n= Integer.parseInt(br.readLine());
+        Stack <String> stack= new Stack<>();
+        boolean isValid= true;
+
+        for (int i=0; i<n; i++){
+            String line= br.readLine().trim();
+
+            if (line.startsWith("#")){
+                if (line.equals("#Body")){
+                    stack.push(line);
+                } else if (line.matches("#Heading[1-6]")) {
+                    int current= Integer.parseInt(line.substring(8));
+
+                    if (stack.contains("#Body")){
+                        isValid=false;
+                        break;
+                    }
+                    if (!stack.isEmpty() && stack.peek().matches("#Heading[1-6]")){
+                        int previous= Integer.parseInt(stack.peek().substring(8));
+                        if (previous>current){
+                            isValid=false;
+                            break;
+                        }
+                    }
+                    stack.push(line);
+                }
+
+            } else if (line.endsWith("#")) {
+                if (line.equals("Body#")){
+                    if (stack.isEmpty() || !stack.peek().equals("#Body")){
+                        isValid=false;
+                        break;
+                    }
+                    stack.pop();
+                }
+                if (line.matches("Heading[1-6]#")){
+                    if (!stack.isEmpty() || stack.peek().matches("Heading[1-6]#")){
+                        int number= Integer.parseInt(line.substring(7,8));
+                        String expected= "#Heading"+number;
+                        if (stack.isEmpty() || !stack.peek().matches(expected)){
+                            isValid=false;
+                            break;
+                        }
+                        stack.pop();
+                    }
+                }
+            }
+
+        }
+        if (!stack.isEmpty()){
+            isValid=false;
+        }
+        System.out.println(isValid ? "True" : "False");
+    }
+}
+
+
+
+
+
+//public class Main {
+//    public static void main(String[] args) throws IOException {
+//
+//        BufferedReader br= new BufferedReader(new InputStreamReader(System.in));
+//        int n= Integer.parseInt(br.readLine());
+//        Stack<String> stack= new Stack<>();
+//        boolean isValid= true;
+//
+//        for (int i=0 ; i<n ; i++){
+//            String line= br.readLine().trim();
+//
+//            if (line.startsWith("#")){
+//                if (line.equals("#Body")){
+//                    stack.push(line);
+//                } else if (line.matches("#Heading[1-6]")) {
+//                    int currentLevel= Integer.parseInt(line.substring(8));
+//
+//                    if (stack.contains("#Body")){
+//                        isValid=false;
+//                        break;
+//                    }
+//
+//                    if (!stack.isEmpty() && stack.peek().matches("#Heading[1-6]")){
+//                        int parentLevel= Integer.parseInt(stack.peek().substring(8));
+//                        if (currentLevel<parentLevel){
+//                            isValid=false;
+//                            break;
+//                        }
+//                    }
+//                    stack.push(line);
+//                }
+//            } else if (line.endsWith("#")) {
+//                if (line.equals("Body#")){
+//                    if (stack.isEmpty() || !stack.peek().equals("#Body")){
+//                        isValid=false;
+//                        break;
+//                    }
+//                    stack.pop();
+//                } else if (line.matches("Heading[1-6]#")) {
+//                    int closingLevel= Integer.parseInt(line.substring(7,line.length()-1));
+//                    String expectedOpening= "#Heading"+closingLevel;
+//
+//                    if (stack.isEmpty() || !stack.peek().equals(expectedOpening)){
+//                        isValid=false;
+//                        break;
+//                    }
+//                    stack.pop();
+//                }
+//            }
+//        }
+//        if (!stack.isEmpty())
+//            isValid=false;
+//
+//        System.out.println(isValid ? "true" : "false");
+//    }
+//}

@@ -1,0 +1,41 @@
+
+Rule: subsubsection must be inside subsection
+Rule: text must be inside any other block
+
+TRUE:
+19
+/begin{section}
+/begin{text}
+more text
+/end{text}
+/begin{subsection}
+/begin{text}
+text text
+text text
+/end{text}
+/begin{subsubsection}
+/begin{text}
+text text
+/end{text}
+/end{subsubsection}
+/begin{text}
+text text
+/end{text}
+/end{subsection}
+/end{section}
+
+FALSE:
+4
+/begin{text}
+text text
+/end{text}
+/end{section}
+----------------
+7
+/begin{section}
+/begin{subsubsection}
+/begin{text}
+text text
+/end{text}
+/end{subsubsection}
+/end{section}
