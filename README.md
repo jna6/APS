@@ -1,3 +1,3 @@
 # APS
 
-Algorithms and Data Structures solved exercises
+Algorithms and Data Structures exercises
